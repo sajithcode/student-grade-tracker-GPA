@@ -41,7 +41,7 @@ function StudentPage() {
   });
 
   return (
-    <AppShell>
+    <>
       <Button asChild variant="ghost" size="sm" className="mb-4 -ml-2">
         <Link to="/results">
           <ArrowLeft className="size-4" /> Back to results
@@ -59,7 +59,7 @@ function StudentPage() {
       ) : (
         <StudentBody data={data} />
       )}
-    </AppShell>
+    </>
   );
 }
 
@@ -81,7 +81,7 @@ function StudentBody({ data }: { data: { student: any; results: any[] } }) {
   return (
     <div className="space-y-6">
       <Card
-        className="overflow-hidden border-0 shadow-[var(--shadow-card)]"
+        className="overflow-hidden border-0 shadow-(--shadow-card)"
         style={{ background: "var(--gradient-hero)" }}
       >
         <CardContent className="p-6 text-primary-foreground">
@@ -124,7 +124,7 @@ function StudentBody({ data }: { data: { student: any; results: any[] } }) {
           const semGpa = calcGpa(gpaItems);
           const credits = gpaItems.reduce((s, x) => s + Number(x.credits), 0);
           return (
-            <Card key={sem} className="shadow-[var(--shadow-card)]">
+            <Card key={sem} className="shadow-(--shadow-card)">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3">
                 <CardTitle className="text-base">Semester {sem}</CardTitle>
                 <div className="flex items-center gap-3 text-sm text-muted-foreground">
@@ -137,32 +137,34 @@ function StudentBody({ data }: { data: { student: any; results: any[] } }) {
                 </div>
               </CardHeader>
               <CardContent>
-                <table className="w-full text-sm">
-                  <thead className="text-left text-xs uppercase tracking-wide text-muted-foreground">
-                    <tr>
-                      <th className="pb-2">Code</th>
-                      <th className="pb-2">Course</th>
-                      <th className="pb-2">Credits</th>
-                      <th className="pb-2">Grade</th>
-                      <th className="pb-2">Points</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {items.map((r) => (
-                      <tr key={r.id} className="border-t border-border/60">
-                        <td className="py-2 font-mono text-xs">{r.course.code}</td>
-                        <td className="py-2">{r.course.name}</td>
-                        <td className="py-2">{r.course.credits}</td>
-                        <td className="py-2">
-                          <span className="rounded-md bg-secondary px-2 py-0.5 text-xs font-medium">
-                            {r.grade}
-                          </span>
-                        </td>
-                        <td className="py-2 tabular-nums">{Number(r.grade_point).toFixed(1)}</td>
+                <div className="overflow-x-auto lg:overflow-hidden rounded-md">
+                  <table className="min-w-160 md:min-w-full text-sm">
+                    <thead className="text-left text-xs uppercase tracking-wide text-muted-foreground">
+                      <tr>
+                        <th className="pb-2">Code</th>
+                        <th className="pb-2">Course</th>
+                        <th className="pb-2">Credits</th>
+                        <th className="pb-2">Grade</th>
+                        <th className="pb-2">Points</th>
                       </tr>
-                    ))}
-                  </tbody>
-                </table>
+                    </thead>
+                    <tbody>
+                      {items.map((r) => (
+                        <tr key={r.id} className="border-t border-border/60">
+                          <td className="py-2 font-mono text-xs">{r.course.code}</td>
+                          <td className="py-2">{r.course.name}</td>
+                          <td className="py-2">{r.course.credits}</td>
+                          <td className="py-2">
+                            <span className="rounded-md bg-secondary px-2 py-0.5 text-xs font-medium">
+                              {r.grade}
+                            </span>
+                          </td>
+                          <td className="py-2 tabular-nums">{Number(r.grade_point).toFixed(1)}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
               </CardContent>
             </Card>
           );
