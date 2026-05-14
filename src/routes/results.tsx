@@ -2,6 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { AppShell } from "@/components/layout/AppShell";
+import { ProtectedRoute } from "@/components/layout/ProtectedRoute";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -13,9 +14,11 @@ import { calcGpa, gpaBadgeClass } from "@/lib/gpa";
 
 export const Route = createFileRoute("/results")({
   component: () => (
-    <AppShell>
-      <ResultsPage />
-    </AppShell>
+    <ProtectedRoute>
+      <AppShell>
+        <ResultsPage />
+      </AppShell>
+    </ProtectedRoute>
   ),
 });
 

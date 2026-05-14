@@ -1,7 +1,15 @@
-import { Link, useLocation } from "@tanstack/react-router";
-import { GraduationCap, LayoutDashboard, Upload, Table2 } from "lucide-react";
+import { Link, useLocation, useNavigate } from "@tanstack/react-router";
+import { GraduationCap, LayoutDashboard, Upload, Table2, LogOut } from "lucide-react";
 import { Toaster } from "@/components/ui/sonner";
+import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { cn } from "@/lib/utils";
+import { useAuth } from "@/hooks/use-auth";
 
 const nav = [
   { to: "/", label: "Dashboard", icon: LayoutDashboard },
@@ -11,6 +19,18 @@ const nav = [
 
 export function AppShell({ children }: { children: React.ReactNode }) {
   const loc = useLocation();
+  const navigate = useNavigate();
+  const { user, signOut } = useAuth();
+
+  const handleLogout = async () => {
+    try {
+      await signOut();
+      navigate({ to: "/login" });
+    } catch (error) {
+      console.error("Logout error:", error);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-background">
       <header className="sticky top-0 z-40 border-b border-border/60 bg-background/80 backdrop-blur-xl">
@@ -43,6 +63,24 @@ export function AppShell({ children }: { children: React.ReactNode }) {
               );
             })}
           </nav>
+          <div className="flex items-center gap-4">
+            <div className="text-sm text-muted-foreground">
+              {user?.email}
+            </div>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="outline" size="sm">
+                  Menu
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuItem onClick={handleLogout}>
+                  <LogOut className="mr-2 h-4 w-4" />
+                  Logout
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
         </div>
       </header>
       <main className="mx-auto max-w-7xl px-6 py-8">

@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useCallback, useRef, useState } from "react";
 import { AppShell } from "@/components/layout/AppShell";
+import { ProtectedRoute } from "@/components/layout/ProtectedRoute";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
@@ -12,9 +13,11 @@ import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/upload")({
   component: () => (
-    <AppShell>
-      <UploadPage />
-    </AppShell>
+    <ProtectedRoute>
+      <AppShell>
+        <UploadPage />
+      </AppShell>
+    </ProtectedRoute>
   ),
 });
 

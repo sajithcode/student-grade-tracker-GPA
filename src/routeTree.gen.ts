@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as UploadRouteImport } from './routes/upload'
 import { Route as ResultsRouteImport } from './routes/results'
+import { Route as LoginRouteImport } from './routes/login'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as StudentsStudentIdRouteImport } from './routes/students.$studentId'
 
@@ -22,6 +23,11 @@ const UploadRoute = UploadRouteImport.update({
 const ResultsRoute = ResultsRouteImport.update({
   id: '/results',
   path: '/results',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LoginRoute = LoginRouteImport.update({
+  id: '/login',
+  path: '/login',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
@@ -37,12 +43,14 @@ const StudentsStudentIdRoute = StudentsStudentIdRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/login': typeof LoginRoute
   '/results': typeof ResultsRoute
   '/upload': typeof UploadRoute
   '/students/$studentId': typeof StudentsStudentIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/login': typeof LoginRoute
   '/results': typeof ResultsRoute
   '/upload': typeof UploadRoute
   '/students/$studentId': typeof StudentsStudentIdRoute
@@ -50,20 +58,28 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/login': typeof LoginRoute
   '/results': typeof ResultsRoute
   '/upload': typeof UploadRoute
   '/students/$studentId': typeof StudentsStudentIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/results' | '/upload' | '/students/$studentId'
+  fullPaths: '/' | '/login' | '/results' | '/upload' | '/students/$studentId'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/results' | '/upload' | '/students/$studentId'
-  id: '__root__' | '/' | '/results' | '/upload' | '/students/$studentId'
+  to: '/' | '/login' | '/results' | '/upload' | '/students/$studentId'
+  id:
+    | '__root__'
+    | '/'
+    | '/login'
+    | '/results'
+    | '/upload'
+    | '/students/$studentId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  LoginRoute: typeof LoginRoute
   ResultsRoute: typeof ResultsRoute
   UploadRoute: typeof UploadRoute
   StudentsStudentIdRoute: typeof StudentsStudentIdRoute
@@ -85,6 +101,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ResultsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -104,6 +127,7 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  LoginRoute: LoginRoute,
   ResultsRoute: ResultsRoute,
   UploadRoute: UploadRoute,
   StudentsStudentIdRoute: StudentsStudentIdRoute,
