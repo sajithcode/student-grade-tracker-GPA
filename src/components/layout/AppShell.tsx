@@ -1,23 +1,28 @@
+import { useState } from "react";
 import { Link, useLocation, useNavigate } from "@tanstack/react-router";
-import { GraduationCap, LayoutDashboard, Upload, Table2, LogOut } from "lucide-react";
+import { GraduationCap, LayoutDashboard, Upload, Table2, LogOut, Menu, X } from "lucide-react";
 import { Toaster } from "@/components/ui/sonner";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
+  DropdownMenuGroup,
   DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/hooks/use-auth";
 
 const nav = [
-  { to: "/", label: "Dashboard", icon: LayoutDashboard },
+  { to: "/", label: "Project", icon: LayoutDashboard },
   { to: "/upload", label: "Upload", icon: Upload },
   { to: "/results", label: "Results", icon: Table2 },
 ] as const;
 
 export function AppShell({ children }: { children: React.ReactNode }) {
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const loc = useLocation();
   const navigate = useNavigate();
   const { user, signOut } = useAuth();
@@ -47,7 +52,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
               <div className="text-[11px] text-muted-foreground">Result processing</div>
             </div>
           </Link>
-          <nav className="flex items-center gap-1">
+          <div className="hidden items-center gap-1 sm:flex">
             {nav.map((n) => {
               const active = n.to === "/" ? loc.pathname === "/" : loc.pathname.startsWith(n.to);
               const Icon = n.icon;
@@ -63,26 +68,66 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                   )}
                 >
                   <Icon className="size-4" />
-                  <span className="hidden sm:inline">{n.label}</span>
+                  <span>{n.label}</span>
                 </Link>
               );
             })}
-          </nav>
-          <div className="flex items-center gap-4">
-            <div className="text-sm text-muted-foreground">{user?.email}</div>
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="outline" size="sm">
-                  Menu
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
-                <DropdownMenuItem onClick={handleLogout}>
-                  <LogOut className="mr-2 h-4 w-4" />
-                  Logout
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
+          </div>
+          <div className="flex items-center gap-2">
+            <div className="hidden text-sm text-muted-foreground sm:block">{user?.email}</div>
+            <div className="hidden sm:block">
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="outline" size="sm">
+                    Menu
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                  <DropdownMenuItem onClick={handleLogout}>
+                    <LogOut className="mr-2 h-4 w-4" />
+                    Logout
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </div>
+            <div className="sm:hidden">
+              <DropdownMenu open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="outline" size="sm">
+                    {mobileMenuOpen ? <X className="size-4" /> : <Menu className="size-4" />}
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="min-w-56">
+                  {user?.email ? (
+                    <DropdownMenuLabel className="px-2 text-xs text-muted-foreground">
+                      {user.email}
+                    </DropdownMenuLabel>
+                  ) : null}
+                  <DropdownMenuSeparator />
+                  {nav.map((n) => {
+                    const Icon = n.icon;
+                    return (
+                      <DropdownMenuItem asChild key={n.to} onClick={() => setMobileMenuOpen(false)}>
+                        <Link to={n.to} className="flex items-center gap-2 rounded-sm px-2 py-1.5">
+                          <Icon className="size-4" />
+                          {n.label}
+                        </Link>
+                      </DropdownMenuItem>
+                    );
+                  })}
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem
+                    onClick={() => {
+                      setMobileMenuOpen(false);
+                      handleLogout();
+                    }}
+                  >
+                    <LogOut className="mr-2 h-4 w-4" />
+                    Logout
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </div>
           </div>
         </div>
       </header>
