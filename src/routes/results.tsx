@@ -179,8 +179,8 @@ function ResultsPage() {
             </Select>
           </div>
 
-          <div className="mt-5 overflow-hidden rounded-xl border border-border/70">
-            <table className="w-full text-sm">
+          <div className="mt-5 overflow-x-auto lg:overflow-hidden rounded-xl border border-border/70">
+            <table className="min-w-[720px] md:min-w-full text-sm">
               <thead className="bg-secondary/60 text-left text-xs uppercase tracking-wide text-muted-foreground">
                 <tr>
                   <th className="px-4 py-3">Student</th>
