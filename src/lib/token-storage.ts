@@ -3,7 +3,7 @@
  * These functions help debug and verify that authentication tokens are properly stored
  */
 
-const TOKEN_KEY = 'sb-token';
+const TOKEN_KEY = "sb-token";
 
 /**
  * Get the stored token from localStorage
@@ -14,7 +14,7 @@ export function getStoredToken() {
     if (!tokenStr) return null;
     return JSON.parse(tokenStr);
   } catch (error) {
-    console.error('Error parsing stored token:', error);
+    console.error("Error parsing stored token:", error);
     return null;
   }
 }
@@ -64,9 +64,9 @@ export function clearStoredToken() {
 export function debugLogToken() {
   const token = getStoredToken();
   if (!token) {
-    console.log('No token stored in localStorage');
+    console.log("No token stored in localStorage");
   } else {
-    console.log('Token Info:', {
+    console.log("Token Info:", {
       hasAccessToken: !!token.access_token,
       hasRefreshToken: !!token.refresh_token,
       user: token.user,
@@ -80,10 +80,10 @@ export function debugLogToken() {
  * Check all localStorage items related to auth
  */
 export function debugLogAllAuthStorage() {
-  console.log('=== All Auth Storage ===');
+  console.log("=== All Auth Storage ===");
   for (let i = 0; i < localStorage.length; i++) {
     const key = localStorage.key(i);
-    if (key && (key.includes('token') || key.includes('session') || key.includes('auth'))) {
+    if (key && (key.includes("token") || key.includes("session") || key.includes("auth"))) {
       const value = localStorage.getItem(key);
       if (value && value.length < 500) {
         console.log(`${key}:`, value);
@@ -92,5 +92,5 @@ export function debugLogAllAuthStorage() {
       }
     }
   }
-  console.log('===================');
+  console.log("===================");
 }

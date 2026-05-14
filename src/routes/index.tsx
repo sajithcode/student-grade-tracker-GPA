@@ -26,7 +26,10 @@ function Dashboard() {
       const [s, c, r] = await Promise.all([
         supabase.from("students").select("id", { count: "exact", head: true }),
         supabase.from("courses").select("id", { count: "exact", head: true }),
-        supabase.from("results").select("credits:course_id, grade_point, course:courses(credits)").limit(5000),
+        supabase
+          .from("results")
+          .select("credits:course_id, grade_point, course:courses(credits)")
+          .limit(5000),
       ]);
       const rows = (r.data ?? []) as { grade_point: number; course: { credits: number } | null }[];
       const items = rows
@@ -57,15 +60,25 @@ function Dashboard() {
               Compute semester GPAs in seconds
             </h1>
             <p className="mt-2 text-sm text-primary-foreground/80 md:text-base">
-              Drop an Excel file with student results and we handle parsing, validation, deduplication,
-              and GPA calculation across semesters.
+              Drop an Excel file with student results and we handle parsing, validation,
+              deduplication, and GPA calculation across semesters.
             </p>
             <div className="mt-5 flex flex-wrap gap-2">
-              <Button asChild variant="secondary" className="bg-white text-foreground hover:bg-white/90">
+              <Button
+                asChild
+                variant="secondary"
+                className="bg-white text-foreground hover:bg-white/90"
+              >
                 <Link to="/upload">Upload results</Link>
               </Button>
-              <Button asChild variant="outline" className="border-white/30 bg-white/10 text-white hover:bg-white/20 hover:text-white">
-                <Link to="/results">Browse results <ArrowUpRight className="ml-1 size-4" /></Link>
+              <Button
+                asChild
+                variant="outline"
+                className="border-white/30 bg-white/10 text-white hover:bg-white/20 hover:text-white"
+              >
+                <Link to="/results">
+                  Browse results <ArrowUpRight className="ml-1 size-4" />
+                </Link>
               </Button>
             </div>
           </div>
@@ -87,9 +100,19 @@ function Dashboard() {
               <Skeleton className="h-8 w-24" />
             ) : (
               <div className="flex items-baseline gap-3">
-                <div className="text-3xl font-semibold tracking-tight">{data!.overall.toFixed(2)}</div>
-                <span className={`rounded-full px-2 py-0.5 text-xs font-medium ${gpaBadgeClass(data!.overall)}`}>
-                  {data!.overall >= 3.7 ? "Excellent" : data!.overall >= 3.0 ? "Good" : data!.overall >= 2.0 ? "Average" : "Needs work"}
+                <div className="text-3xl font-semibold tracking-tight">
+                  {data!.overall.toFixed(2)}
+                </div>
+                <span
+                  className={`rounded-full px-2 py-0.5 text-xs font-medium ${gpaBadgeClass(data!.overall)}`}
+                >
+                  {data!.overall >= 3.7
+                    ? "Excellent"
+                    : data!.overall >= 3.0
+                      ? "Good"
+                      : data!.overall >= 2.0
+                        ? "Average"
+                        : "Needs work"}
                 </span>
               </div>
             )}
@@ -102,9 +125,21 @@ function Dashboard() {
           <CardTitle>Get started</CardTitle>
         </CardHeader>
         <CardContent className="grid gap-4 text-sm md:grid-cols-3">
-          <Step n={1} title="Download template" desc="Use the standard Excel template with the required columns." />
-          <Step n={2} title="Upload results" desc="Drag and drop your .xlsx file. Duplicates are skipped automatically." />
-          <Step n={3} title="View GPAs" desc="Check semester-wise and overall GPAs from the Results page." />
+          <Step
+            n={1}
+            title="Download template"
+            desc="Use the standard Excel template with the required columns."
+          />
+          <Step
+            n={2}
+            title="Upload results"
+            desc="Drag and drop your .xlsx file. Duplicates are skipped automatically."
+          />
+          <Step
+            n={3}
+            title="View GPAs"
+            desc="Check semester-wise and overall GPAs from the Results page."
+          />
         </CardContent>
       </Card>
     </div>
@@ -114,14 +149,24 @@ function Dashboard() {
 function Step({ n, title, desc }: { n: number; title: string; desc: string }) {
   return (
     <div className="rounded-xl border border-border/70 bg-secondary/40 p-4">
-      <div className="grid size-7 place-items-center rounded-lg bg-primary text-xs font-semibold text-primary-foreground">{n}</div>
+      <div className="grid size-7 place-items-center rounded-lg bg-primary text-xs font-semibold text-primary-foreground">
+        {n}
+      </div>
       <div className="mt-3 font-medium">{title}</div>
       <div className="mt-1 text-muted-foreground">{desc}</div>
     </div>
   );
 }
 
-function StatCard({ icon: Icon, label, value }: { icon: any; label: string; value: number | null }) {
+function StatCard({
+  icon: Icon,
+  label,
+  value,
+}: {
+  icon: any;
+  label: string;
+  value: number | null;
+}) {
   return (
     <Card className="shadow-[var(--shadow-card)]">
       <CardHeader className="pb-2">
@@ -130,7 +175,11 @@ function StatCard({ icon: Icon, label, value }: { icon: any; label: string; valu
         </CardTitle>
       </CardHeader>
       <CardContent>
-        {value === null ? <Skeleton className="h-8 w-20" /> : <div className="text-3xl font-semibold tracking-tight">{value.toLocaleString()}</div>}
+        {value === null ? (
+          <Skeleton className="h-8 w-20" />
+        ) : (
+          <div className="text-3xl font-semibold tracking-tight">{value.toLocaleString()}</div>
+        )}
       </CardContent>
     </Card>
   );

@@ -72,7 +72,9 @@ function UploadPage() {
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div>
           <h1 className="text-2xl font-semibold tracking-tight">Upload results</h1>
-          <p className="text-sm text-muted-foreground">Drag & drop an Excel file with student results.</p>
+          <p className="text-sm text-muted-foreground">
+            Drag & drop an Excel file with student results.
+          </p>
         </div>
         <Button variant="outline" onClick={downloadTemplate}>
           <Download className="size-4" /> Download template
@@ -82,7 +84,10 @@ function UploadPage() {
       <Card className="shadow-[var(--shadow-card)]">
         <CardContent className="p-6">
           <div
-            onDragOver={(e) => { e.preventDefault(); setDrag(true); }}
+            onDragOver={(e) => {
+              e.preventDefault();
+              setDrag(true);
+            }}
             onDragLeave={() => setDrag(false)}
             onDrop={(e) => {
               e.preventDefault();
@@ -93,7 +98,9 @@ function UploadPage() {
             onClick={() => inputRef.current?.click()}
             className={cn(
               "flex cursor-pointer flex-col items-center justify-center gap-3 rounded-2xl border-2 border-dashed px-6 py-14 text-center transition-colors",
-              drag ? "border-primary bg-primary/5" : "border-border hover:border-primary/40 hover:bg-secondary/40",
+              drag
+                ? "border-primary bg-primary/5"
+                : "border-border hover:border-primary/40 hover:bg-secondary/40",
             )}
           >
             <div className="grid size-14 place-items-center rounded-2xl bg-primary/10 text-primary">
@@ -138,7 +145,11 @@ function UploadPage() {
               <Stat label="Total rows" value={summary.totalRows} />
               <Stat label="Imported" value={summary.inserted} accent="success" />
               <Stat label="Duplicates skipped" value={summary.skipped} />
-              <Stat label="Errors" value={summary.errors.length} accent={summary.errors.length ? "danger" : undefined} />
+              <Stat
+                label="Errors"
+                value={summary.errors.length}
+                accent={summary.errors.length ? "danger" : undefined}
+              />
             </div>
             {summary.errors.length > 0 && (
               <div className="rounded-lg border border-destructive/30 bg-destructive/5 p-4">
@@ -147,7 +158,9 @@ function UploadPage() {
                 </div>
                 <ul className="max-h-56 space-y-1 overflow-auto text-xs text-destructive/90">
                   {summary.errors.slice(0, 50).map((e, i) => (
-                    <li key={i}>Row {e.row}: {e.message}</li>
+                    <li key={i}>
+                      Row {e.row}: {e.message}
+                    </li>
                   ))}
                 </ul>
               </div>
@@ -164,7 +177,15 @@ function UploadPage() {
   );
 }
 
-function Stat({ label, value, accent }: { label: string; value: number; accent?: "success" | "danger" }) {
+function Stat({
+  label,
+  value,
+  accent,
+}: {
+  label: string;
+  value: number;
+  accent?: "success" | "danger";
+}) {
   return (
     <div className="rounded-xl border border-border/70 bg-secondary/40 p-4">
       <div className="text-xs text-muted-foreground">{label}</div>
@@ -187,7 +208,9 @@ async function persist(
 ): Promise<{ inserted: number; skipped: number }> {
   // Upsert students
   const studentsMap = new Map<string, { student_id: string; name: string }>();
-  rows.forEach((r) => studentsMap.set(r.Student_ID, { student_id: r.Student_ID, name: r.Student_Name }));
+  rows.forEach((r) =>
+    studentsMap.set(r.Student_ID, { student_id: r.Student_ID, name: r.Student_Name }),
+  );
   const { data: studentRows, error: sErr } = await supabase
     .from("students")
     .upsert(Array.from(studentsMap.values()), { onConflict: "student_id" })
@@ -198,7 +221,9 @@ async function persist(
 
   // Upsert courses
   const coursesMap = new Map<string, { code: string; name: string; credits: number }>();
-  rows.forEach((r) => coursesMap.set(r.Course_Code, { code: r.Course_Code, name: r.Course_Name, credits: r.Credits }));
+  rows.forEach((r) =>
+    coursesMap.set(r.Course_Code, { code: r.Course_Code, name: r.Course_Name, credits: r.Credits }),
+  );
   const { data: courseRows, error: cErr } = await supabase
     .from("courses")
     .upsert(Array.from(coursesMap.values()), { onConflict: "code" })
@@ -219,8 +244,12 @@ async function persist(
   const { data: existing } = await supabase
     .from("results")
     .select("student_id, course_id, semester");
-  const existingKeys = new Set((existing ?? []).map((e) => `${e.student_id}-${e.semester}-${e.course_id}`));
-  const toInsertCount = resultPayload.filter((r) => !existingKeys.has(`${r.student_id}-${r.semester}-${r.course_id}`)).length;
+  const existingKeys = new Set(
+    (existing ?? []).map((e) => `${e.student_id}-${e.semester}-${e.course_id}`),
+  );
+  const toInsertCount = resultPayload.filter(
+    (r) => !existingKeys.has(`${r.student_id}-${r.semester}-${r.course_id}`),
+  ).length;
 
   const { error: rErr, count } = await supabase
     .from("results")

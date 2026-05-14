@@ -33,7 +33,6 @@ Before setting up the project, ensure you have the following installed:
    ```
 
 3. **Create a Supabase Project**
-
    - Go to [Supabase](https://supabase.com/) and sign up for a free account.
    - Create a new project.
    - From the project dashboard, get your:
@@ -64,6 +63,7 @@ Before setting up the project, ensure you have the following installed:
    - Execute the query
 
    **Option B: Using Supabase CLI**
+
    ```bash
    npm install -g supabase
    supabase link --project-ref your-project-ref
@@ -71,7 +71,6 @@ Before setting up the project, ensure you have the following installed:
    ```
 
 6. **Enable Authentication in Supabase**
-
    - Go to Authentication > Providers in your Supabase project
    - Enable Email/Password authentication (it's enabled by default)
    - Optionally configure other providers (Google, GitHub, etc.)
@@ -83,7 +82,6 @@ Before setting up the project, ensure you have the following installed:
    ```
 
 8. **Access the Application**
-
    - Open your browser and navigate to `http://localhost:3000`
    - You'll be redirected to the login page
    - Click "Sign Up" to create a new account, or use existing credentials if you have an account
